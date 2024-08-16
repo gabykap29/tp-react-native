@@ -10,13 +10,19 @@ import Animated, {
 } from "react-native-reanimated";
 
 export default function HomeScreen() {
-  // Variable compartida que controla el estado de presión del botón (0 o 1)
+  // Valor compartido para controlar el color de fondo (0 o 1)
   const isPressed = useSharedValue(0);
+
+  // Valor compartido para controlar la visibilidad del título (true o false)
+  const isTitleVisible = useSharedValue(true);
 
   // Función llamada al presionar el botón
   const handlePress = () => {
-    // Alterna el valor de isPressed entre 0 y 1
+    // Alterna el valor de isPressed entre 0 y 1 para animar el fondo
     isPressed.value = isPressed.value === 0 ? 1 : 0;
+
+    // Alterna el valor de isTitleVisible para animar la visibilidad del título
+    isTitleVisible.value = !isTitleVisible.value;
   };
 
   // Define el estilo animado basado en el valor de isPressed
@@ -42,7 +48,8 @@ export default function HomeScreen() {
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      <TitleAnimated />
+      {/* Pasa la prop isVisible al componente TitleAnimated */}
+      <TitleAnimated isVisible={isTitleVisible.value} />
 
       <View style={styles.buttonContainer}>
         <Button

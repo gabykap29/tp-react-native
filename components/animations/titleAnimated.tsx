@@ -1,28 +1,31 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Animated, {
   useSharedValue,
-  withSpring,
+  withTiming, // Importar withTiming para animación de opacidad
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-const TitleAnimated = () => {
-  // valor inicial de la animación
-  const translateY = useSharedValue(-100);
+// Define el tipo de las props que recibe el componente
+interface TitleAnimatedProps {
+  isVisible: boolean; // Prop para controlar la visibilidad del título
+}
 
-  //  estilo animado
+const TitleAnimated: React.FC<TitleAnimatedProps> = ({ isVisible }) => {
+  // Valor compartido para la animación de opacidad
+  const opacity = useSharedValue(1);
+
+  // Define el estilo animado basado en la prop isVisible
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      // transforma el componente en el eje Y
-      transform: [{ translateY: translateY.value }],
+      // Controla la opacidad del título basado en isVisible
+      opacity: withTiming(isVisible ? 1 : 0, {
+        duration: 500, // Duración de la animación de desvanecimiento (500 ms)
+      }),
+      // Controla la animación de movimiento vertical (puede ser ajustado o eliminado)
+      transform: [{ translateY: withTiming(0, { duration: 500 }) }],
     };
-  });
-
-  // Inicia la animación al cargar el componente
-  useEffect(() => {
-    // animación con rebote al valor 0 en el eje Y, con el withSpring se puede configurar la animación para que tenga un rebote
-    translateY.value = withSpring(0, { damping: 2, stiffness: 100 });
-  }, []);
+  }, [isVisible]); // Dependencia de isVisible para actualizar la animación
 
   return (
     <View style={styles.container}>
