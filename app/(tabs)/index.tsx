@@ -1,56 +1,77 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import { Button } from "react-native-paper";
-import TitleAnimated from "@/components/animations/titleAnimated";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   interpolateColor,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 
-export default function HomeScreen() {
-  // Valor compartido para controlar el color de fondo (0 o 1)
-  const isPressed = useSharedValue(0);
+// se define los tipos de las props que recibirá el componente TitleAnimated
+interface TitleAnimatedProps {
+  isVisible: boolean;
+}
 
-  // Valor compartido para controlar la visibilidad del título (true o false)
+const TitleAnimated: React.FC<TitleAnimatedProps> = ({ isVisible }) => {
+  // valor compartido para la posición vertical del título
+  const translateY = useSharedValue(-100);
+
+  // valor compartido para la opacidad del título
+  const opacity = useSharedValue(0);
+
+  // estilo animado para el título
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: withSpring(translateY.value) }],
+      opacity: withTiming(opacity.value, { duration: 500 }),
+    };
+  });
+
+  useEffect(() => {
+    // si el título es visible, se desliza hacia abajo y se hace visible
+    if (isVisible) {
+      translateY.value = 0;
+      opacity.value = 1;
+    } else {
+      // si no es visible, se desliza hacia arriba y se hace invisible
+      translateY.value = -100;
+      opacity.value = 0;
+    }
+  }, [isVisible]);
+
+  return (
+    <Animated.Text style={[styles.title, animatedStyle]}>
+      Título Animado
+    </Animated.Text>
+  );
+};
+
+const HomeScreen: React.FC = () => {
+  const isPressed = useSharedValue(0);
   const isTitleVisible = useSharedValue(true);
 
-  // Función llamada al presionar el botón
   const handlePress = () => {
-    // Alterna el valor de isPressed entre 0 y 1 para animar el fondo
     isPressed.value = isPressed.value === 0 ? 1 : 0;
-
-    // Alterna el valor de isTitleVisible para animar la visibilidad del título
     isTitleVisible.value = !isTitleVisible.value;
   };
 
-  // Define el estilo animado basado en el valor de isPressed
   const containerStyle = useAnimatedStyle(() => {
-    // Interpola el color basado en el valor de isPressed
     const backgroundColor = interpolateColor(
-      isPressed.value, // Valor de isPressed (0 o 1)
-      [0, 1], // Rango de valores de isPressed
-      ["#000000", "#d3d3d3"], // Negro a gris
+      isPressed.value,
+      [0, 1],
+      ["#000000", "#d3d3d3"]
     );
 
-    // Interpola la opacidad basado en el valor de isPressed
-    const opacity = withSpring(isPressed.value === 0 ? 1 : 0.5, {
-      damping: 2, // Controla el "rebote" de la animación
-      stiffness: 100, // Controla la rapidez de la animación
-    });
-
     return {
-      backgroundColor, // Devuelve el color interpolado como parte del estilo
-      opacity, // Devuelve la opacidad interpolada
+      backgroundColor,
     };
   });
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      {/* Pasa la prop isVisible al componente TitleAnimated */}
       <TitleAnimated isVisible={isTitleVisible.value} />
-
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
@@ -63,27 +84,34 @@ export default function HomeScreen() {
       </View>
     </Animated.View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "black", // Color de fondo inicial (será reemplazado por la animación)
+    backgroundColor: "black",
+  },
+  title: {
+    fontSize: 24,
+    color: "#fff",
+    marginBottom: 20,
   },
   buttonContainer: {
-    width: "80%", // Ajusta el ancho del contenedor del botón
+    width: "80%",
     alignItems: "center",
     marginTop: 20,
   },
   button: {
-    width: "100%", // Ocupa todo el ancho disponible
-    paddingVertical: 10, // Agrega padding vertical
-    borderRadius: 4, // Redondea los bordes del botón
+    width: "100%",
+    paddingVertical: 10,
+    borderRadius: 4,
   },
   buttonLabel: {
-    fontSize: 16, // Tamaño del texto en el botón
-    color: "#fff", // Color del texto en el botón
+    fontSize: 16,
+    color: "#fff",
   },
 });
+
+export default HomeScreen;
