@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import Animated, {
   useSharedValue,
@@ -9,37 +9,37 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-// se define los tipos de las props que recibirá el componente TitleAnimated
+// Se definen los tipos de las props que recibirá el componente TitleAnimated
 interface TitleAnimatedProps {
   isVisible: boolean;
 }
 
 const TitleAnimated: React.FC<TitleAnimatedProps> = ({ isVisible }) => {
-  // valor compartido para la posición vertical del título
+  // Valor compartido para la posición vertical del título
   const translateY = useSharedValue(-100);
 
-  // valor compartido para la opacidad del título
+  // Valor compartido para la opacidad del título
   const opacity = useSharedValue(0);
 
-  // estilo animado para el título
+  // Estilo animado para el título
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: withSpring(translateY.value) }],
-      opacity: withTiming(opacity.value, { duration: 500 }),
+      opacity: withTiming(opacity.value, { duration: 2000 }), 
     };
   });
 
   useEffect(() => {
-    // si el título es visible, se desliza hacia abajo y se hace visible
     if (isVisible) {
+      // si el título es visible, se deliza hacia abajo y hazlo visible
       translateY.value = 0;
       opacity.value = 1;
     } else {
-      // si no es visible, se desliza hacia arriba y se hace invisible
+      // si no es visible, se deliza hacia arriba y desvanece lentamente
       translateY.value = -100;
       opacity.value = 0;
     }
-  }, [isVisible]);
+  }, [isVisible, translateY, opacity]);
 
   return (
     <Animated.Text style={[styles.title, animatedStyle]}>
@@ -58,10 +58,9 @@ const HomeScreen: React.FC = () => {
   };
 
   const containerStyle = useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(
-      isPressed.value,
-      [0, 1],
-      ["#000000", "#d3d3d3"]
+    const backgroundColor = withTiming(
+      isPressed.value === 0 ? "#000000" : "#d3d3d3",
+      { duration: 2000 } // se ajusta la duración para que la transición sea suave
     );
 
     return {
@@ -99,12 +98,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    width: "80%",
+    width: "100%",
+    position: "absolute",
+    bottom: 20,
     alignItems: "center",
-    marginTop: 20,
   },
   button: {
-    width: "100%",
+    width: "80%",
     paddingVertical: 10,
     borderRadius: 4,
   },
