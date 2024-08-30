@@ -1,50 +1,86 @@
-# Welcome to your Expo app 👋
+# Animación en React Native
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Descripción
 
-## Get started
+Esta aplicación muestra cómo implementar animaciones en React Native utilizando la librería `react-native-reanimated`. El proyecto presenta un título animado que se desliza hacia abajo desde la parte superior de la pantalla y se desvanece cuando el usuario presiona un botón. Además, el fondo de la pantalla cambia de color como parte de la animación.
 
-1. Install dependencies
+## Tecnologías Utilizadas
 
-   ```bash
-   npm install
-   ```
+- **React Native**: Framework para construir aplicaciones móviles utilizando JavaScript y React.
+- **react-native-reanimated**: Librería para animaciones avanzadas en React Native.
+- **react-native-paper**: Librería de componentes de UI que sigue las guías de Material Design.
 
-2. Start the app
+## Instalación
 
-   ```bash
-    npx expo start
-   ```
+Para instalar y ejecutar la aplicación localmente, sigue estos pasos:
 
-In the output, you'll find options to open the app in a
+1. **Clona el repositorio**:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+    ```bash
+    git clone https://github.com/tu_usuario/tu_repositorio.git
+    ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+2. **Navega al directorio del proyecto**:
 
-## Get a fresh project
+    ```bash
+    cd tu_repositorio
+    ```
 
-When you're ready, run:
+3. **Instala las dependencias**:
 
-```bash
-npm run reset-project
-```
+    ```bash
+    npm install
+    ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+    o
 
-## Learn more
+    ```bash
+    yarn install
+    ```
 
-To learn more about developing your project with Expo, look at the following resources:
+4. **Instala las dependencias específicas de `react-native-reanimated`**:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+    ```bash
+    npm install react-native-reanimated
+    ```
 
-## Join the community
+    o
 
-Join our community of developers creating universal apps.
+    ```bash
+    yarn add react-native-reanimated
+    ```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+5. **Ejecuta el proyecto en tu simulador/emulador**:
+
+    ```bash
+    npm start
+    ```
+
+    o
+
+    ```bash
+    yarn start
+    ```
+
+## Funcionalidades
+
+1. **Título Animado**: Un título que se desliza desde la parte superior de la pantalla y se desvanece cuando el usuario presiona un botón.
+2. **Cambio de Color de Fondo**: El fondo de la pantalla cambia de color al presionar el botón, como parte de la animación.
+
+## Código
+
+El código principal se encuentra en el archivo `HomeScreen.tsx` e incluye:
+
+- **TitleAnimated Component**: 
+  - **Animaciones**: Desliza el título hacia abajo desde la parte superior y ajusta su opacidad.
+- **HomeScreen Component**:
+  - **Estado**: Controla la visibilidad del título y el color de fondo mediante animaciones.
+  - **Botón**: Cambia el estado del título y el color de fondo al ser presionado.
+
+## Uso
+
+1. Al iniciar la aplicación, el título aparece deslizado desde la parte superior y visible.
+2. Al presionar el botón "Iniciar", el título se desvanece y el fondo cambia de color.
+
+
+
