@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Button, Text as PaperText } from "react-native-paper"; // importa componentes de react-native-paper para el botón y el texto
 import Animated, {
@@ -50,12 +50,13 @@ const TitleAnimated: React.FC<TitleAnimatedProps> = ({ isVisible }) => {
 };
 
 const HomeScreen: React.FC = () => {
+  const [isTitleVisible, setTitleVisible] = useState(true);// vlor compartido para controlar la visibilidad del título
   const isPressed = useSharedValue(0); // valor compartido para controlar si el botón ha sido presionado
-  const isTitleVisible = useSharedValue(true); // vlor compartido para controlar la visibilidad del título
+   
 
   const handlePress = () => {
     isPressed.value = isPressed.value === 0 ? 1 : 0; // alterna entre 0 y 1 para el estado del botón
-    isTitleVisible.value = !isTitleVisible.value; // alterna la visibilidad del título
+    isTitleVisible ? setTitleVisible(false): setTitleVisible(true)
   };
 
   // estilo animado para el contenedor basado en el estado del botón
@@ -72,7 +73,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <Animated.View style={[styles.container, containerStyle]}> 
-      <TitleAnimated isVisible={isTitleVisible.value} /> 
+        {isTitleVisible && <TitleAnimated isVisible={isTitleVisible} />} 
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: "#fff", 
+    color: "#E4080A", 
     marginBottom: 20, 
   },
   buttonContainer: {
