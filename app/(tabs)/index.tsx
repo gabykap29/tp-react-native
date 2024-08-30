@@ -1,66 +1,68 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Text as PaperText } from "react-native-paper"; // importa componentes de react-native-paper para el botón y el texto
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  interpolateColor,
   withSpring,
   withTiming,
-} from "react-native-reanimated";
+} from "react-native-reanimated"; // importa herramientas de react-native-reanimated para animaciones
 
-// Se definen los tipos de las props que recibirá el componente TitleAnimated
+// se definen los tipos de las props que recibirá el componente TitleAnimated
 interface TitleAnimatedProps {
-  isVisible: boolean;
+  isVisible: boolean; // propiedad booleana para controlar la visibilidad del título
 }
 
 const TitleAnimated: React.FC<TitleAnimatedProps> = ({ isVisible }) => {
-  // Valor compartido para la posición vertical del título
-  const translateY = useSharedValue(-100);
+  // valor compartido para la posición vertical del título
+  const translateY = useSharedValue(-100); // inicializa la posición vertical fuera de la vista
 
-  // Valor compartido para la opacidad del título
-  const opacity = useSharedValue(0);
+  // vvalor compartido para la opacidad del título
+  const opacity = useSharedValue(0); // inicializa la opacidad como 0 (invisible)
 
-  // Estilo animado para el título
+  // estilo animado para el título
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ translateY: withSpring(translateY.value) }],
-      opacity: withTiming(opacity.value, { duration: 2000 }), 
+      transform: [{ translateY: withSpring(translateY.value) }], // aplica una animación de resorte a la posición vertical
+      opacity: withTiming(opacity.value, { duration: 500 }), // aplica una animación de tiempo a la opacidad
     };
   });
 
   useEffect(() => {
     if (isVisible) {
       // si el título es visible, se deliza hacia abajo y hazlo visible
-      translateY.value = 0;
-      opacity.value = 1;
+      translateY.value = 0; // Ajusta la posición vertical a 0
+      opacity.value = 1; // Ajusta la opacidad a 1 (visible)
     } else {
-      // si no es visible, se deliza hacia arriba y desvanece lentamente
-      translateY.value = -100;
-      opacity.value = 0;
+      // si no es visble, se deliza hacia arriba y desvanece lentamente
+      translateY.value = -100; // ajusta la posición vertical fuera de la vista
+      opacity.value = 0; // ajusta la opacidad a 0 (invisible)
     }
-  }, [isVisible, translateY, opacity]);
+  }, [isVisible, translateY, opacity]); // dependencias del efecto para que se ejecute cuando cambie isVisible
 
   return (
-    <Animated.Text style={[styles.title, animatedStyle]}>
-      Título Animado
-    </Animated.Text>
+    <Animated.View style={animatedStyle}> 
+      <PaperText style={styles.title}> 
+        Título
+      </PaperText>
+    </Animated.View>
   );
 };
 
 const HomeScreen: React.FC = () => {
-  const isPressed = useSharedValue(0);
-  const isTitleVisible = useSharedValue(true);
+  const isPressed = useSharedValue(0); // valor compartido para controlar si el botón ha sido presionado
+  const isTitleVisible = useSharedValue(true); // vlor compartido para controlar la visibilidad del título
 
   const handlePress = () => {
-    isPressed.value = isPressed.value === 0 ? 1 : 0;
-    isTitleVisible.value = !isTitleVisible.value;
+    isPressed.value = isPressed.value === 0 ? 1 : 0; // alterna entre 0 y 1 para el estado del botón
+    isTitleVisible.value = !isTitleVisible.value; // alterna la visibilidad del título
   };
 
+  // estilo animado para el contenedor basado en el estado del botón
   const containerStyle = useAnimatedStyle(() => {
     const backgroundColor = withTiming(
-      isPressed.value === 0 ? "#000000" : "#d3d3d3",
-      { duration: 2000 } // se ajusta la duración para que la transición sea suave
+      isPressed.value === 0 ? "#000000" : "#fff", // cambia el color de fondo entre negro y blanco
+      { duration: 500 } // duración de la transición de color de fondo
     );
 
     return {
@@ -69,14 +71,13 @@ const HomeScreen: React.FC = () => {
   });
 
   return (
-    <Animated.View style={[styles.container, containerStyle]}>
-      <TitleAnimated isVisible={isTitleVisible.value} />
+    <Animated.View style={[styles.container, containerStyle]}> 
+      <TitleAnimated isVisible={isTitleVisible.value} /> 
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
-          onPress={handlePress}
+          onPress={handlePress} // maneja el evento de presionar el botón
           style={styles.button}
-          labelStyle={styles.buttonLabel}
         >
           Iniciar
         </Button>
@@ -90,12 +91,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "black",
+    backgroundColor: "black", 
   },
   title: {
     fontSize: 24,
-    color: "#fff",
-    marginBottom: 20,
+    color: "#fff", 
+    marginBottom: 20, 
   },
   buttonContainer: {
     width: "100%",
@@ -104,13 +105,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    width: "80%",
-    paddingVertical: 10,
-    borderRadius: 4,
-  },
-  buttonLabel: {
-    fontSize: 16,
-    color: "#fff",
+    width: "80%", 
   },
 });
 
